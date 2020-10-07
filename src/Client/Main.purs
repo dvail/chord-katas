@@ -30,21 +30,24 @@ instance showInterval :: Show Interval where
   show Whole = "Whole"
   show Half = "Half"
 
-allNotes :: List Note
-allNotes = fromFoldable [C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B]
+chromaticScale :: Array Note
+chromaticScale = [C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B]
 
-majorScaleInterval :: List Interval
-majorScaleInterval = fromFoldable [Whole, Whole, Half, Whole, Whole, Whole, Half]
+majorScaleInterval :: Array Interval
+majorScaleInterval = [Whole, Whole, Half, Whole, Whole, Whole, Half]
 
-majorScale :: Note -> List Note
-majorScale note = buildScale note majorScaleInterval
+chromaticFrom :: Note -> List Note
+chromaticFrom rootNote = dropWhile (\n -> n /= rootNote) $ chromaticList <> chromaticList
+  where chromaticList = reverse $ fromFoldable chromaticScale
 
-allNotesFrom :: Note -> List Note
-allNotesFrom rootNote = dropWhile (\n -> n /= rootNote) $ allNotes <> allNotes
-
-buildScale :: Note -> List Interval -> List Note
-buildScale rootNote intervals = buildScale' majorScaleInterval (allNotesFrom rootNote) $ Cons rootNote Nil
+buildScale :: Note -> Array Interval -> List Note
+buildScale rootNote intervals = buildScale' intervalList noteList $ rootNote:Nil
   where
+    noteList :: List Note
+    -- since we already have the root note, drop it from the working note list
+    noteList = drop 1 $ chromaticFrom rootNote
+    intervalList :: List Interval
+    intervalList = reverse $ fromFoldable intervals
     buildScale' :: List Interval -> List Note -> List Note -> List Note
     buildScale' (Whole:ixs) (y:(x:xs)) scale = buildScale' ixs xs $ Cons x scale
     buildScale' (Half:ixs)  (x:xs)     scale = buildScale' ixs xs $ Cons x scale
@@ -52,6 +55,9 @@ buildScale rootNote intervals = buildScale' majorScaleInterval (allNotesFrom roo
     buildScale' (Whole:_)   Nil        scale = scale
     buildScale' (Whole:_)   (x:Nil)    scale = scale
     buildScale' Nil          _         scale = scale
+
+majorScale :: Note -> List Note
+majorScale note = buildScale note majorScaleInterval
 
 main :: Effect Unit
 main = do
