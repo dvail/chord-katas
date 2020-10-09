@@ -2,7 +2,7 @@ module Client.Main where
 
 import Prelude
 
-import Client.Data.Music (Note(..), majorScale)
+import Core.Data.Music (Note(..), majorScale)
 
 import Effect (Effect)
 import Effect.Console (log)
