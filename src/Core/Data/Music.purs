@@ -29,6 +29,17 @@ instance showInterval :: Show Interval where
 
 data Chord = Major Note | Minor Note | Dom7 Note | Maj7 Note | Dim Note
 
+derive instance eqChord :: Eq Chord
+
+instance showChord :: Show Chord where
+  show (Major n) = "Major " <> show n
+  show (Minor n) = "Minor " <> show n
+  show (Dom7 n) = "Dom7 " <> show n
+  show (Maj7 n) = "Maj7 " <> show n
+  show (Dim n) = "Dim " <> show n
+
+data RomanNumeral = I | II | III | IV | V | VI | VII
+
 chromaticScale :: Array Note
 chromaticScale = [C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B]
 
@@ -58,3 +69,8 @@ buildScale rootNote intervals = buildScale' intervalList noteList $ rootNote:Nil
 majorScale :: Note -> List Note
 majorScale note = buildScale note majorScaleInterval
 
+majorProgression :: Note -> List RomanNumeral -> List Chord
+majorProgression _ _ = Nil
+
+minorProgression :: Note -> List RomanNumeral -> List Chord
+minorProgression _ _ = Nil
