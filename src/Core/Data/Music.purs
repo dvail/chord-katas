@@ -1,6 +1,5 @@
 module Core.Data.Music 
-  (
-    Note(..)
+  ( Note(..)
   , Chord(..)
   , RomanNumeral
   , majorScale
@@ -55,7 +54,6 @@ instance showChord :: Show Chord where
   show (Maj7 n) = "Maj7 " <> show n
   show (Dim n) = "Dim " <> show n
 
-{- TODO Hide this export to prevent construction -}
 newtype RomanNumeral i = RomanNumeral Int
 
 rn_I :: RomanNumeral Int
@@ -108,27 +106,36 @@ majorScale note = buildScale note majorScaleInterval
 minorScale :: Note -> List Note
 minorScale note = buildScale note minorScaleInterval
 
-majorProgression :: Note -> List (RomanNumeral Int) -> Maybe (List Chord)
-majorProgression root numerals = sequence $ chordFromNumeral scale <$> numerals
+type ProgressionChordTypes = { major :: Array Int , minor :: Array Int , dim :: Array Int }
+
+progression :: 
+  (Note -> List Note) ->
+  ProgressionChordTypes ->
+  Note ->
+  List (RomanNumeral Int) ->
+  Maybe (List Chord)
+progression baseScale chordTypes root numerals = sequence $ chordFromNumeral scale <$> numerals
   where
     chordFromNumeral :: List Note -> RomanNumeral Int -> Maybe Chord
     chordFromNumeral s (RomanNumeral n) 
-      | elem n [1 ,4, 5] = Major <$> (index s $ n - 1)
-      | elem n [2, 3, 6] = Minor <$> (index s $ n - 1)
-      | elem n [7]       = Dim   <$> (index s $ n - 1)
-      | otherwise = Nothing
+      | elem n chordTypes.major = Major <$> (index s $ n - 1)
+      | elem n chordTypes.minor = Minor <$> (index s $ n - 1)
+      | elem n chordTypes.dim   = Dim   <$> (index s $ n - 1)
+      | otherwise               = Nothing
     scale :: List Note
-    scale = majorScale root
+    scale = baseScale root
+
+
+majorProgression :: Note -> List (RomanNumeral Int) -> Maybe (List Chord)
+majorProgression = progression majorScale 
+  { major : [1, 4, 5]
+  , minor : [2, 3, 6]
+  , dim   : [7]
+  }
 
 minorProgression :: Note -> List (RomanNumeral Int) -> Maybe (List Chord)
-minorProgression root numerals = sequence $ chordFromNumeral scale <$> numerals
-  where
-    chordFromNumeral :: List Note -> RomanNumeral Int -> Maybe Chord
-    chordFromNumeral s (RomanNumeral n) 
-      | elem n [3, 6, 7] = Major <$> (index s $ n - 1)
-      | elem n [1, 4, 5] = Minor <$> (index s $ n - 1)
-      | elem n [2]       = Dim   <$> (index s $ n - 1)
-      | otherwise = Nothing
-    scale :: List Note
-    scale = minorScale root
-
+minorProgression = progression minorScale 
+  { major : [3, 6, 7]
+  , minor : [1, 4, 5]
+  , dim   : [2]
+  }

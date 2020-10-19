@@ -4,8 +4,7 @@ module Test.Core.Data.Music where
 import Prelude
 
 import Core.Data.Music
-  (
-    Note(..)
+  ( Note(..)
   , Chord(..)
   , majorScale
   , majorProgression
