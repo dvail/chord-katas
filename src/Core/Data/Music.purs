@@ -56,20 +56,23 @@ instance showChord :: Show Chord where
 
 newtype RomanNumeral i = RomanNumeral Int
 
+-- The 'Int' portion of this type refers to the indexed item of the target scale
 rn_I :: RomanNumeral Int
-rn_I = RomanNumeral 1
+rn_I = RomanNumeral 0
 rn_II :: RomanNumeral Int
-rn_II = RomanNumeral 2
+rn_II = RomanNumeral 1
 rn_III :: RomanNumeral Int
-rn_III = RomanNumeral 3
+rn_III = RomanNumeral 2
 rn_IV :: RomanNumeral Int
-rn_IV = RomanNumeral 4
+rn_IV = RomanNumeral 3
 rn_V :: RomanNumeral Int
-rn_V = RomanNumeral 5
+rn_V = RomanNumeral 4
 rn_VI :: RomanNumeral Int
-rn_VI = RomanNumeral 6
+rn_VI = RomanNumeral 5
 rn_VII :: RomanNumeral Int
-rn_VII = RomanNumeral 7
+rn_VII = RomanNumeral 6
+
+derive instance romanNumeralIntEq :: Eq (RomanNumeral Int)
 
 chromaticScale :: Array Note
 chromaticScale = [C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B]
@@ -106,7 +109,11 @@ majorScale note = buildScale note majorScaleInterval
 minorScale :: Note -> List Note
 minorScale note = buildScale note minorScaleInterval
 
-type ProgressionChordTypes = { major :: Array Int , minor :: Array Int , dim :: Array Int }
+type ProgressionChordTypes = 
+  { major :: Array (RomanNumeral Int)
+  , minor :: Array (RomanNumeral Int)
+  , dim   :: Array (RomanNumeral Int)
+  }
 
 progression :: 
   (Note -> List Note) ->
@@ -117,25 +124,24 @@ progression ::
 progression baseScale chordTypes root numerals = sequence $ chordFromNumeral scale <$> numerals
   where
     chordFromNumeral :: List Note -> RomanNumeral Int -> Maybe Chord
-    chordFromNumeral s (RomanNumeral n) 
-      | elem n chordTypes.major = Major <$> (index s $ n - 1)
-      | elem n chordTypes.minor = Minor <$> (index s $ n - 1)
-      | elem n chordTypes.dim   = Dim   <$> (index s $ n - 1)
+    chordFromNumeral s rn@(RomanNumeral n)
+      | elem rn chordTypes.major = Major <$> (index s n)
+      | elem rn chordTypes.minor = Minor <$> (index s n)
+      | elem rn chordTypes.dim   = Dim   <$> (index s n)
       | otherwise               = Nothing
     scale :: List Note
     scale = baseScale root
 
-
 majorProgression :: Note -> List (RomanNumeral Int) -> Maybe (List Chord)
 majorProgression = progression majorScale 
-  { major : [1, 4, 5]
-  , minor : [2, 3, 6]
-  , dim   : [7]
+  { major : [rn_I, rn_IV, rn_V]
+  , minor : [rn_II, rn_III, rn_VI]
+  , dim   : [rn_VII]
   }
 
 minorProgression :: Note -> List (RomanNumeral Int) -> Maybe (List Chord)
 minorProgression = progression minorScale 
-  { major : [3, 6, 7]
-  , minor : [1, 4, 5]
-  , dim   : [2]
+  { major : [rn_III, rn_VI, rn_VII]
+  , minor : [rn_I, rn_IV, rn_V]
+  , dim   : [rn_II]
   }
