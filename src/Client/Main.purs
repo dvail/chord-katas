@@ -2,6 +2,7 @@ module Client.Main where
 
 import Prelude
 
+import Data.List
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Exception (throw)
@@ -11,7 +12,7 @@ import Web.HTML (window)
 import Web.HTML.HTMLDocument (toNonElementParentNode)
 import Web.HTML.Window (document)
 
-import Core.Data.Music (Note(..), majorScale)
+import Core.Data.Music (Note(..), rn_I, rn_IV, rn_V, rn_VI)
 import Client.Root (root)
 
 main :: Effect Unit
@@ -21,4 +22,4 @@ main = do
     Nothing -> throw "Container element not found."
     Just c  -> do
       app <- root
-      render (app 0) c
+      render (app { rootNote: G, chordNums: (rn_I:rn_VI:rn_V:rn_IV:Nil) }) c
