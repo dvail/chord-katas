@@ -6,6 +6,10 @@ const webpack = require('webpack');
 const isWebpackDevServer = process.argv.some(a => path.basename(a) === 'webpack-dev-server');
 const isWatch = process.argv.some(a => a === '--watch');
 
+let tailwindcss = require('tailwindcss')
+let purgecss = require('@fullhuman/postcss-purgecss')
+
+
 const plugins =
   isWebpackDevServer || !isWatch ? [] : [
     function(){
@@ -57,6 +61,32 @@ module.exports = {
             loader: 'url-loader',
             options: {
               limit: 8192,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.css$/i,
+        use: [
+          'style-loader',
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: [
+                tailwindcss,
+                ...process.env.NODE_ENV !== 'development'
+                  ? [purgecss({
+                    content: [
+                      './src/index.html',
+                      './src/**/*.js',
+                      './src/**/*.purs',
+                    ],
+                    defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
+                  })]
+                  : [],
+              ],
             },
           },
         ],
