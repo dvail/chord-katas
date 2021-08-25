@@ -20,7 +20,7 @@ clickableNote onClick note =
     { children: [ R.text $ show note ]
     , onClick: handler_ do
         onClick \_ -> note
-    , className: "mx-4 inline-block text-indigo-600"
+    , className: "mx-2 inline-block text-indigo-600"
     }
 
 

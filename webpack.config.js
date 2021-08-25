@@ -7,7 +7,6 @@ const isWebpackDevServer = process.argv.some(a => path.basename(a) === 'webpack-
 const isWatch = process.argv.some(a => a === '--watch');
 
 let tailwindcss = require('tailwindcss')
-let purgecss = require('@fullhuman/postcss-purgecss')
 
 
 const plugins =
@@ -76,16 +75,6 @@ module.exports = {
               ident: 'postcss',
               plugins: [
                 tailwindcss,
-                ...process.env.NODE_ENV !== 'development'
-                  ? [purgecss({
-                    content: [
-                      './src/index.html',
-                      './src/**/*.js',
-                      './src/**/*.purs',
-                    ],
-                    defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
-                  })]
-                  : [],
               ],
             },
           },
