@@ -9,13 +9,13 @@ import Core.Data.Music
   , majorScale
   , majorProgression
   , minorProgression
-  , rn_I
-  , rn_II
-  , rn_III
-  , rn_IV
-  , rn_V
-  , rn_VI
-  , rn_VII
+  , sd_I
+  , sd_II
+  , sd_III
+  , sd_IV
+  , sd_V
+  , sd_VI
+  , sd_VII
   )
 import Data.List (List(..), (:), take)
 import Data.Maybe (Maybe(..))
@@ -38,10 +38,10 @@ testScales = runTest do
     test "Major progressions" do
       Assert.equal (Just ((Major C) : (Major F) : (Major G) : Nil))
         $ majorProgression C  
-        $ rn_I : rn_IV : rn_V : Nil
+        $ sd_I : sd_IV : sd_V : Nil
       Assert.equal (Just ((Major D) : (Major A) : (Minor B) : (Major G) : Nil))
         $ majorProgression D  
-        $ rn_I : rn_V : rn_VI : rn_IV : Nil
+        $ sd_I : sd_V : sd_VI : sd_IV : Nil
       Assert.equal 
         (Just (
           (Major G) : (Major G) : (Major G) : (Major G)
@@ -50,20 +50,20 @@ testScales = runTest do
         : Nil
         ))
         $ majorProgression G  
-        $ rn_I : rn_I : rn_I : rn_I : rn_IV : rn_IV : rn_I : rn_I : rn_V : rn_V : rn_I : rn_I : Nil
+        $ sd_I : sd_I : sd_I : sd_I : sd_IV : sd_IV : sd_I : sd_I : sd_V : sd_V : sd_I : sd_I : Nil
       Assert.equal (Just ((Major Ab) : (Minor F) : (Major Db) : (Major Eb) : Nil))
         $ majorProgression Ab 
-        $ rn_I : rn_VI : rn_IV : rn_V : Nil
+        $ sd_I : sd_VI : sd_IV : sd_V : Nil
     test "Minor progressions" do
       Assert.equal (Just ((Minor C) : (Minor F) : (Major Ab) : Nil))
         $ minorProgression C  
-        $ rn_I : rn_IV : rn_VI : Nil
+        $ sd_I : sd_IV : sd_VI : Nil
       Assert.equal (Just ((Minor D) : (Dim E) : (Minor A) : (Minor D) : Nil))
         $ minorProgression D  
-        $ rn_I : rn_II : rn_V : rn_I : Nil
+        $ sd_I : sd_II : sd_V : sd_I : Nil
       Assert.equal (Just ((Minor G) : (Dim A) : (Major Eb) : (Major F) : Nil))
         $ minorProgression G  
-        $ rn_I : rn_II : rn_VI : rn_VII : Nil
+        $ sd_I : sd_II : sd_VI : sd_VII : Nil
       Assert.equal (Just ((Minor Db) : (Minor Gb) : (Major E) : (Major B) : Nil))
         $ minorProgression Db 
-        $ rn_I : rn_IV : rn_III : rn_VII : Nil
+        $ sd_I : sd_IV : sd_III : sd_VII : Nil

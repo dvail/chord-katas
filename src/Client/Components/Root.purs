@@ -1,64 +1,55 @@
-module Client.Root where
+module Client.Components.Root where
 
-import Data.Array as Array
-import Data.List
-import Data.String
 import Prelude
 
-import Core.Data.Music 
-  ( Note
-  , RomanNumeral
-  , majorProgression
-  , rn_I
-  , rn_II
-  , rn_III
-  , rn_IV
-  , rn_V
-  , rn_VI
-  , rn_VII
-  )
+import Client.Components.ChromaticScale (mkChromaticScale)
+import Core.Data.Music (Note(..), ScaleDegree, majorProgression, sd_I, sd_II, sd_III, sd_IV, sd_V, sd_VI, sd_VII)
+import Data.Array as Array
+import Data.List (List)
+import Data.String (joinWith)
 import React.Basic.DOM as R
-import React.Basic.Events (handler_)
 import React.Basic.Hooks (Component, component, useState, (/\))
 import React.Basic.Hooks as React
-import Web.DOM.Element (className)
+
 
 type Props =
   { rootNote :: Note
-  , chordNums :: List (RomanNumeral Int)
+  , scaleDegrees :: List (ScaleDegree Int)
   }
 
 progression :: Props -> React.JSX
-progression { rootNote, chordNums } = 
+progression { rootNote, scaleDegrees } = 
     R.div
       { children:
-        [ R.text $ show $ majorProgression rootNote chordNums]
+        [ R.text $ show $ majorProgression rootNote scaleDegrees]
       }
 
-displayChordNum :: RomanNumeral Int -> String
-displayChordNum x
-  | x == rn_I = "I"
-  | x == rn_II = "II"
-  | x == rn_III = "III"
-  | x == rn_IV = "IV"
-  | x == rn_V = "V"
-  | x == rn_VI = "VI"
-  | x == rn_VII = "VII"
+displayScaleDegree :: ScaleDegree Int -> String
+displayScaleDegree x
+  | x == sd_I = "I"
+  | x == sd_II = "II"
+  | x == sd_III = "III"
+  | x == sd_IV = "IV"
+  | x == sd_V = "V"
+  | x == sd_VI = "VI"
+  | x == sd_VII = "VII"
   | otherwise = ""
 
 root :: Component Props
 root = do
+  chromaticScale <- mkChromaticScale
   component "Root" \initialValue -> React.do
-    rootNote /\ setCounter <- useState initialValue.rootNote
-    chordNums /\ setCounter <- useState initialValue.chordNums
+    rootNote /\ setRootNote <- useState initialValue.rootNote
+    scaleDegrees /\ setScaleDegrees <- useState initialValue.scaleDegrees
 
     pure
       $ R.div
           { children:
-              [ R.div
+              [ chromaticScale { currentNote: rootNote, onCurrentNoteChange: setRootNote }
+              , R.div
                   { children: 
                     [ R.div { children: [ R.text $ "Root: " <> show rootNote ] }
-                    , R.div { children: [ R.text $ "Chords: " <> (joinWith " " $ Array.fromFoldable $ displayChordNum <$> chordNums) ] }
+                    , R.div { children: [ R.text $ "Chords: " <> (joinWith " " $ Array.fromFoldable $ displayScaleDegree <$> scaleDegrees) ] }
                     ]
                   }
               , progression initialValue
