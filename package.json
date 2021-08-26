@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "build": "spago build && webpack",
+    "build": "spago install && spago build && webpack",
     "dev:client": "webpack-dev-server --progress --inline --hot"
   },
   "author": "",
@@ -19,9 +19,11 @@
     "nodemon": "^2.0.4",
     "postcss": "^7.0.36",
     "postcss-loader": "^3.0.0",
+    "purescript": "^0.14.4",
     "purescript-psa": "^0.7.3",
     "purgecss": "^3.0.0",
     "purs-loader": "^3.7.2",
+    "spago": "^0.20.3",
     "style-loader": "^2.0.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
     "webpack": "^4.44.2",
