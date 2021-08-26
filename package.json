@@ -2,33 +2,28 @@
   "name": "chord-katas",
   "version": "1.0.0",
   "description": "",
-  "main": "client.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "build": "spago install && spago build && webpack",
-    "dev:client": "webpack-dev-server --progress --inline --hot"
+    "dev": "parcel index.html",
+    "bundle:build": "spago build --purs-args '--codegen corefn'",
+    "bundle:dce": "./bin/zephyr/zephyr -f Client.Main.main",
+    "bundle:parcel": "parcel build index.html --public-url '.' --no-source-maps",
+    "build": "npm run bundle:build && npm run bundle:dce && npm run bundle:parcel"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "autoprefixer": "^9.8.6",
-    "css-loader": "^5.0.0",
-    "html-webpack-plugin": "^4.5.0",
+    "autoprefixer": "^10.3.2",
     "nodemon": "^2.0.4",
-    "postcss": "^7.0.36",
-    "postcss-loader": "^3.0.0",
+    "parcel": "^2.0.0-rc.0",
+    "postcss": "^8.3.6",
     "purescript": "^0.14.4",
     "purescript-psa": "^0.7.3",
     "purgecss": "^3.0.0",
-    "purs-loader": "^3.7.2",
     "spago": "^0.20.3",
-    "style-loader": "^2.0.0",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "tailwindcss": "^2.2.7"
   },
   "dependencies": {
     "react": "^17.0.1",

@@ -1,0 +1,41 @@
+* zephyr-0.3.2           (program and library)
+    Synopsis:      Zephyr, tree-shaking for the PureScript language
+    Versions available: 0.1.1.0, 0.1.4, 0.2.0, 0.2.1, 0.3.1, 0.3.2
+    Versions installed: [ Not installed ]
+    Homepage:      https://github.com/coot/zephyr#readme
+    Bug reports:   [ Not specified ]
+    Description:   Tree shaking tool and partial evaluator for PureScript CoreFn
+                   AST.
+    Category:      Development
+    License:       MPL-2.0
+    Author:        Marcin Szamotulski <profunctor@pm.me>
+    Maintainer:    Marcin Szamotulski <profunctor@pm.me>
+    Source repo:   https://github.com/coot/zephyr
+    Executables:   zephyr
+    Flags:         test-with-stack, test-core-libs
+    Dependencies:  aeson >=1.0 && <1.5, ansi-terminal >=0.7.1 && <0.11,
+                   base >=4.8 && <5, base-compat >=0.6.0, boxes >=0.1.4 && <0.2,
+                   containers, formatting, language-javascript >=0.7.0 && <0.8,
+                   mtl >=2.1.0 && <2.3.0, purescript >=0.13.8 && <0.14,
+                   safe >=0.3.9 && <0.4, text, aeson, async, ansi-terminal,
+                   ansi-wl-pprint, base, bytestring, containers,
+                   directory >=1.2.3, filepath, formatting, Glob >=0.9 && <0.11,
+                   language-javascript, mtl >=2.1.0 && <2.3.0,
+                   optparse-applicative >=0.13.0, purescript >=0.13.8, text,
+                   transformers >=0.3.0 && <0.6, utf8-string >=1 && <2, zephyr,
+                   aeson, base >=4.8 && <5, base-compat >=0.6.0, containers,
+                   directory >=1.2.3, hspec, hspec-core, HUnit,
+                   language-javascript, mtl >=2.1.0 && <2.3.0,
+                   optparse-applicative >=0.13.0, process,
+                   purescript >=0.13.8 && <0.14, QuickCheck >=2.12.1, text,
+                   transformers >=0.3.0 && <0.6, utf8-string >=1 && <2, zephyr
+    Cached:        Yes
+    Modules:
+        Language.PureScript.DCE
+        Language.PureScript.DCE.Constants
+        Language.PureScript.DCE.CoreFn
+        Language.PureScript.DCE.Errors
+        Language.PureScript.DCE.Eval
+        Language.PureScript.DCE.Foreign
+        Language.PureScript.DCE.Utils
+
