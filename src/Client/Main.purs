@@ -2,7 +2,7 @@ module Client.Main where
 
 import Prelude
 
-import Data.List (List(..), (:))
+import Data.List (List(..))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Exception (throw)
@@ -12,7 +12,7 @@ import Web.HTML (window)
 import Web.HTML.HTMLDocument (toNonElementParentNode)
 import Web.HTML.Window (document)
 
-import Core.Data.Music (Note(..), sd_I, sd_IV, sd_V, sd_VI)
+import Core.Data.Music (Note(..))
 import Client.Components.Root (root)
 
 main :: Effect Unit
@@ -22,4 +22,4 @@ main = do
     Nothing -> throw "Container element not found."
     Just c  -> do
       app <- root
-      render (app { rootNote: Eb, scaleDegrees: (sd_I:sd_VI:sd_V:sd_IV:Nil) }) c
+      render (app { rootNote: C, scaleDegrees: Nil }) c

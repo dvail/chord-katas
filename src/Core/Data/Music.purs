@@ -14,6 +14,7 @@ module Core.Data.Music
   , sd_VII
   , chromaticFrom
   , chromaticScale
+  , displayScaleDegree
   ) where
 
 import Prelude
@@ -77,6 +78,20 @@ sd_VII :: ScaleDegree Int
 sd_VII = ScaleDegree 6
 
 derive instance Eq (ScaleDegree Int)
+
+instance Show (ScaleDegree Int) where
+  show (ScaleDegree n) = show n
+
+displayScaleDegree :: ScaleDegree Int -> String
+displayScaleDegree x
+  | x == sd_I = "I"
+  | x == sd_II = "II"
+  | x == sd_III = "III"
+  | x == sd_IV = "IV"
+  | x == sd_V = "V"
+  | x == sd_VI = "VI"
+  | x == sd_VII = "VII"
+  | otherwise = ""
 
 chromaticScale :: Array Note
 chromaticScale = [C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B]
