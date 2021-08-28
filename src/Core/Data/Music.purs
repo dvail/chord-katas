@@ -14,6 +14,7 @@ module Core.Data.Music
   , sdVII
   , chromaticFrom
   , chromaticScale
+  , displayChord
   , displayScaleDegree
   ) where
 
@@ -21,6 +22,7 @@ import Prelude
 
 import Data.List (List(..), (:), elem, reverse, drop, dropWhile, fromFoldable, index)
 import Data.Maybe (Maybe(..))
+import Data.String (Pattern(..), Replacement(..), replace)
 import Data.Traversable (sequence)
 
 data Note = A | Bb | B | C | Db | D | Eb | E | F | Gb | G | Ab
@@ -92,6 +94,18 @@ displayScaleDegree x
   | x == sdVI = "VI"
   | x == sdVII = "VII"
   | otherwise = ""
+
+flatFormat :: String -> String
+flatFormat = replace (Pattern "b") (Replacement "♭")
+nToString :: Note -> String
+nToString = show >>> flatFormat
+
+displayChord :: Chord -> String
+displayChord (Major n) = nToString n
+displayChord (Minor n) = nToString n <> "m"
+displayChord (Dom7 n) = nToString n <> "dom⁷"
+displayChord (Maj7 n) = nToString n <> "maj⁷"
+displayChord (Dim n) = nToString n <> "°"
 
 chromaticScale :: Array Note
 chromaticScale = [ C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B ]
