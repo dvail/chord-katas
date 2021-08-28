@@ -15,7 +15,7 @@ type Props =
   }
 
 clickableNote :: ((Note -> Note) -> Effect Unit) -> Note -> React.JSX
-clickableNote onClick note = 
+clickableNote onClick note =
   R.div
     { children: [ R.text $ show note ]
     , onClick: handler_ do
@@ -23,14 +23,13 @@ clickableNote onClick note =
     , className: "mx-2 inline-block text-indigo-500"
     }
 
-
 mkChromaticScale :: Component Props
 mkChromaticScale = do
   component "ChomaticScale" \props -> React.do
     pure
       $ R.div
-          { children:
-              [ R.div { children: [R.text $ show props.currentNote] }
-              ] <> (clickableNote props.onCurrentNoteChange <$> chromaticScale)
-          , className: "text-red-800"
-          }
+        { children:
+            [ R.div { children: [ R.text $ show props.currentNote ] }
+            ] <> (clickableNote props.onCurrentNoteChange <$> chromaticScale)
+        , className: "text-red-800"
+        }

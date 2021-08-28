@@ -20,6 +20,6 @@ main = do
   container <- getElementById "app" =<< (map toNonElementParentNode $ document =<< window)
   case container of
     Nothing -> throw "Container element not found."
-    Just c  -> do
+    Just c -> do
       app <- root
       render (app { rootNote: C, scaleDegrees: Nil }) c
