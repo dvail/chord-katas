@@ -6,8 +6,9 @@ import Client.Components.ChromaticScale (mkChromaticScale)
 import Client.Components.Progression (mkProgression)
 import Client.Components.ScaleDegrees (mkScaleDegrees)
 import Core.Data.Music (Note, ScaleDegree)
-import Data.List (List)
+import Data.List (List(..))
 import React.Basic.DOM as R
+import React.Basic.Events (handler_)
 import React.Basic.Hooks (Component, component, useState, (/\))
 import React.Basic.Hooks as React
 
@@ -30,6 +31,12 @@ root = do
             [ chromaticScale { currentNote: rootNote, onCurrentNoteChange: setRootNote }
             , scaleDegreesComp { selectedScaleDegrees: scaleDegrees, onSelectedChange: setScaleDegrees }
             , progression { rootNote: rootNote, scaleDegrees: scaleDegrees }
+            , R.button
+                { children:
+                    [ R.text "Clear All"
+                    ]
+                , onClick: handler_ $ setScaleDegrees \_ -> Nil
+                }
             ]
-        , className: "flex flex-col items-center"
+        , className: "flex flex-col items-center text-center"
         }

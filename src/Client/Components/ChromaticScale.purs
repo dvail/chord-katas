@@ -2,7 +2,8 @@ module Client.Components.ChromaticScale where
 
 import Prelude
 
-import Core.Data.Music (Note, chromaticScale)
+import Client.Util (noteBackgroundClass, noteBorderClass, noteColorClass)
+import Core.Data.Music (Note, chromaticScale, displayNote)
 import Effect (Effect)
 import React.Basic.DOM as R
 import React.Basic.Events (handler_)
@@ -14,22 +15,28 @@ type Props =
   , onCurrentNoteChange :: (Note -> Note) -> Effect Unit
   }
 
-clickableNote :: ((Note -> Note) -> Effect Unit) -> Note -> React.JSX
-clickableNote onClick note =
-  R.div
-    { children: [ R.text $ show note ]
-    , onClick: handler_ do
-        onClick \_ -> note
-    , className: "mx-2 inline-block text-indigo-500"
+clickableNote :: Props -> Note -> React.JSX
+clickableNote props note =
+  R.li
+    { children: [ R.text $ displayNote note ]
+    , onClick: handler_ $ props.onCurrentNoteChange \_ -> note
+    , className: "cursor-pointer w-8 h-8 mx-2 inline-block "
+        <> "font-bold text-xl "
+        <> noteColorClass note
+        <> noteBackgroundClass note
+        <> "border-2 rounded "
+        <> noteBorderClass note
+        <> "transition-opacity "
+        <> elemOpacity
     }
+  where
+  elemOpacity =
+    if note == props.currentNote then "opacity-100 "
+    else "opacity-40 hover:opacity-60"
 
 mkChromaticScale :: Component Props
 mkChromaticScale = do
   component "ChomaticScale" \props -> React.do
     pure
-      $ R.div
-        { children:
-            [ R.div { children: [ R.text $ show props.currentNote ] }
-            ] <> (clickableNote props.onCurrentNoteChange <$> chromaticScale)
-        , className: "text-red-800"
-        }
+      $ R.ul_
+      $ clickableNote props <$> chromaticScale

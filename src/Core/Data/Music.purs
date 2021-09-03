@@ -12,9 +12,11 @@ module Core.Data.Music
   , sdV
   , sdVI
   , sdVII
+  , chordRoot
   , chromaticFrom
   , chromaticScale
   , displayChord
+  , displayNote
   , displayScaleDegree
   ) where
 
@@ -60,6 +62,13 @@ instance Show Chord where
   show (Maj7 n) = "Maj7 " <> show n
   show (Dim n) = "Dim " <> show n
 
+chordRoot :: Chord -> Note
+chordRoot (Major n) = n
+chordRoot (Minor n) = n
+chordRoot (Dom7 n) = n
+chordRoot (Maj7 n) = n
+chordRoot (Dim n) = n
+
 newtype ScaleDegree :: forall k. k -> Type
 newtype ScaleDegree i = ScaleDegree Int
 
@@ -95,17 +104,15 @@ displayScaleDegree x
   | x == sdVII = "VII"
   | otherwise = ""
 
-flatFormat :: String -> String
-flatFormat = replace (Pattern "b") (Replacement "♭")
-nToString :: Note -> String
-nToString = show >>> flatFormat
+displayNote :: Note -> String
+displayNote = show >>> replace (Pattern "b") (Replacement "♭")
 
 displayChord :: Chord -> String
-displayChord (Major n) = nToString n
-displayChord (Minor n) = nToString n <> "m"
-displayChord (Dom7 n) = nToString n <> "dom⁷"
-displayChord (Maj7 n) = nToString n <> "maj⁷"
-displayChord (Dim n) = nToString n <> "°"
+displayChord (Major n) = displayNote n
+displayChord (Minor n) = displayNote n <> "m"
+displayChord (Dom7 n) = displayNote n <> "dom⁷"
+displayChord (Maj7 n) = displayNote n <> "maj⁷"
+displayChord (Dim n) = displayNote n <> "°"
 
 chromaticScale :: Array Note
 chromaticScale = [ C, Db, D, Eb, E, F, Gb, G, Ab, A, Bb, B ]

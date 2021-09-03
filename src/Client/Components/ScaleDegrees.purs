@@ -1,12 +1,19 @@
 module Client.Components.ScaleDegrees where
 
-import Data.List
 import Prelude
+import Data.List (List, snoc)
 
-import Core.Data.Music (Note(..), ScaleDegree, displayScaleDegree, majorProgression, sdI, sdII, sdIII, sdIV, sdV, sdVI, sdVII)
-import Data.List (snoc)
-import Data.Map (update)
-import Debug (trace)
+import Core.Data.Music
+  ( ScaleDegree
+  , displayScaleDegree
+  , sdI
+  , sdII
+  , sdIII
+  , sdIV
+  , sdV
+  , sdVI
+  , sdVII
+  )
 import Effect (Effect)
 import React.Basic.DOM as R
 import React.Basic.Events (handler_)
@@ -35,8 +42,7 @@ scaleDegree
 scaleDegree onChange selected sd =
   R.div
     { children: [ R.text $ displayScaleDegree sd ]
-    , onClick: handler_ do
-        onChange $ \_ -> updateSelected selected sd
+    , onClick: handler_ $ onChange \_ -> updateSelected selected sd
     , className: "inline-block mx-2"
     }
 
@@ -50,5 +56,5 @@ mkScaleDegrees = do
               props.onSelectedChange
               props.selectedScaleDegrees
               <$> [ sdI, sdII, sdIII, sdIV, sdV, sdVI, sdVII ]
-        , className: "text-red-800"
+        , className: "cursor-pointer font-serif font-bold text-2xl text-gray-300"
         }
