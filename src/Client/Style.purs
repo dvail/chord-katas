@@ -1,4 +1,4 @@
-module Client.Util where
+module Client.Style where
   
 import Core.Data.Music (Note(..))
 

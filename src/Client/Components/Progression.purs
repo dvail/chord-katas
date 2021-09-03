@@ -1,20 +1,11 @@
 module Client.Components.Progression where
 
 import Prelude
-import Data.List (List(..), zip)
 
-import Client.Util (noteColorClass)
-import Core.Data.Music
-  ( Chord
-  , Note
-  , ScaleDegree
-  , chordRoot
-  , displayChord
-  , displayNote
-  , displayScaleDegree
-  , majorProgression
-  )
+import Client.Style (noteBackgroundClass, noteColorClass)
+import Core.Data.Music (Chord, Note, ScaleDegree, chordRoot, displayChord, displayNote, displayScaleDegree, majorProgression)
 import Data.Array as Array
+import Data.List (List(..), zip)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
 import React.Basic.DOM as R
@@ -29,10 +20,16 @@ type Props =
 sdWithChord :: Tuple Chord (ScaleDegree Int) -> React.JSX
 sdWithChord (Tuple chord sd) = R.div
   { children:
-      [ R.span_ [ R.text $ displayScaleDegree sd ]
+      [ R.span
+          { children: [ R.text $ displayScaleDegree sd ]
+          , className: "font-serif text-gray-200 "
+          }
       , R.span_ [ R.text $ displayChord chord ]
       ]
-  , className: "flex flex-col mx-2 " <> (noteColorClass <<< chordRoot) chord
+  , className: "flex flex-col text-3xl p-4 mr-1 "
+      <> "font-bold "
+      <> (noteColorClass <<< chordRoot) chord
+      <> "bg-white bg-opacity-10"
   }
 
 progression :: Note -> List (ScaleDegree Int) -> React.JSX

@@ -10,6 +10,11 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     colors,
+    fontFamily: {
+      sans: ['Nunito', 'sans-serif'],
+      serif: ['serif'],
+      display: ['"Ceviche One"', 'serif'],
+    },
     extend: {},
   },
   variants: {
