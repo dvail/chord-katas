@@ -28,14 +28,27 @@ root = do
     pure
       $ R.div
         { children:
-            [ chromaticScale { currentNote: rootNote, onCurrentNoteChange: setRootNote }
-            , scaleDegreesComp { selectedScaleDegrees: scaleDegrees, onSelectedChange: setScaleDegrees }
+            [ R.h1
+                { children: [ R.text "Chord Katas" ]
+                , className: "text-7xl font-display mt-6 text-gray-300"
+                }
+            , R.h2
+                { children: [ R.text "Chord Progression Generator" ]
+                , className: "text-lg mb-8 text-gray-200"
+                }
+            , chromaticScale
+                { currentNote: rootNote, onCurrentNoteChange: setRootNote }
+            , scaleDegreesComp
+                { selectedScaleDegrees: scaleDegrees, onSelectedChange: setScaleDegrees }
             , progression { rootNote: rootNote, scaleDegrees: scaleDegrees }
             , R.button
-                { children:
-                    [ R.text "Clear All"
-                    ]
+                { children: [ R.text "Clear All" ]
                 , onClick: handler_ $ setScaleDegrees \_ -> Nil
+                , className: "px-4 py-2 "
+                    <> "border-2 rounded border-gray-500 "
+                    <> "text-gray-200 bg-gray-700 "
+                    <> "hover:border-red-700 hover:bg-red-900 hover:text-red-300 "
+                    <> "transition-colors hover:transition-colors "
                 }
             ]
         , className: "flex flex-col items-center text-center"

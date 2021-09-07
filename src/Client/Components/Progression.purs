@@ -36,7 +36,7 @@ progression :: Note -> List (ScaleDegree Int) -> React.JSX
 progression rootNote scaleDegrees =
   R.div
     { children: Array.fromFoldable $ sdWithChord <$> zipChords chords scaleDegrees
-    , className: "flex flex-row justify-center"
+    , className: "flex flex-row justify-center m-4"
     }
   where
   chords = majorProgression rootNote scaleDegrees
@@ -47,20 +47,34 @@ progression rootNote scaleDegrees =
   zipChords Nothing _ = Nil
   zipChords (Just cs) sds = zip cs sds
 
+noProgression :: React.JSX
+noProgression = R.h3
+  { children: [ R.text "No progression selected" ]
+  , className: "p-6 m-4 "
+      <> "text-gray-500 text-lg "
+      <> "rounded "
+      <> "bg-white bg-opacity-10"
+  }
+
 mkProgression :: Component Props
 mkProgression = do
   component "Progression" \props -> React.do
     pure
       $ R.div
         { children:
-            [ R.h2_ [ R.text "Selected Progression" ]
-            , R.h2_
-                [ R.text "Key of "
-                , R.span
-                    { children: [ R.text $ displayNote props.rootNote ]
-                    , className: "font-bold" <> noteColorClass props.rootNote
-                    }
-                ]
-            , progression props.rootNote props.scaleDegrees
+            [ R.h2
+                { children:
+                    [ R.text "Progression in the Key of "
+                    , R.span
+                        { children: [ R.text $ displayNote props.rootNote ]
+                        , className: "font-bold " <> noteColorClass props.rootNote
+                        }
+                    ]
+                , className: "text-xl "
+                }
+            , case props.scaleDegrees of
+                Nil -> noProgression
+                _ -> progression props.rootNote props.scaleDegrees
             ]
+        , className: "my-6 "
         }
