@@ -40,16 +40,20 @@ root = do
                 { currentNote: rootNote, onCurrentNoteChange: setRootNote }
             , scaleDegreesComp
                 { selectedScaleDegrees: scaleDegrees, onSelectedChange: setScaleDegrees }
-            , progression { rootNote: rootNote, scaleDegrees: scaleDegrees }
+            , R.div
+                { children:
+                    [ progression { rootNote: rootNote, scaleDegrees: scaleDegrees } ]
+                , className: "flex flex-col flex-1 justify-center "
+                }
             , R.button
                 { children: [ R.text "Clear All" ]
                 , onClick: handler_ $ setScaleDegrees \_ -> Nil
-                , className: "px-4 py-2 "
+                , className: "px-4 py-2 my-8 "
                     <> "border-2 rounded border-gray-500 "
                     <> "text-gray-200 bg-gray-700 "
                     <> "hover:border-red-700 hover:bg-red-900 hover:text-red-300 "
                     <> "transition-colors hover:transition-colors "
                 }
             ]
-        , className: "flex flex-col items-center text-center"
+        , className: "h-full flex flex-col items-center text-center"
         }

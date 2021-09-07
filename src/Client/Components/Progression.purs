@@ -76,5 +76,4 @@ mkProgression = do
                 Nil -> noProgression
                 _ -> progression props.rootNote props.scaleDegrees
             ]
-        , className: "my-6 "
         }
