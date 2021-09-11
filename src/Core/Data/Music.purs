@@ -1,17 +1,10 @@
 module Core.Data.Music
   ( Note(..)
   , Chord(..)
-  , ScaleDegree
+  , ScaleDegree(..)
   , majorScale
   , majorProgression
   , minorProgression
-  , sdI
-  , sdII
-  , sdIII
-  , sdIV
-  , sdV
-  , sdVI
-  , sdVII
   , chordRoot
   , chromaticFrom
   , chromaticScale
@@ -69,40 +62,27 @@ chordRoot (Dom7 n) = n
 chordRoot (Maj7 n) = n
 chordRoot (Dim n) = n
 
-newtype ScaleDegree :: forall k. k -> Type
-newtype ScaleDegree i = ScaleDegree Int
+data ScaleDegree = I | II | III | IV | V | VI | VII
 
--- The 'Int' portion of this type refers to the indexed item of the target scale
-sdI :: ScaleDegree Int
-sdI = ScaleDegree 0
-sdII :: ScaleDegree Int
-sdII = ScaleDegree 1
-sdIII :: ScaleDegree Int
-sdIII = ScaleDegree 2
-sdIV :: ScaleDegree Int
-sdIV = ScaleDegree 3
-sdV :: ScaleDegree Int
-sdV = ScaleDegree 4
-sdVI :: ScaleDegree Int
-sdVI = ScaleDegree 5
-sdVII :: ScaleDegree Int
-sdVII = ScaleDegree 6
+derive instance Eq ScaleDegree
 
-derive instance Eq (ScaleDegree Int)
+sdToInt :: ScaleDegree -> Int
+sdToInt I = 1
+sdToInt II = 2
+sdToInt III= 3
+sdToInt IV = 4
+sdToInt V = 5
+sdToInt VI = 6
+sdToInt VII = 7
 
-instance Show (ScaleDegree Int) where
-  show (ScaleDegree n) = show n
-
-displayScaleDegree :: ScaleDegree Int -> String
-displayScaleDegree x
-  | x == sdI = "I"
-  | x == sdII = "II"
-  | x == sdIII = "III"
-  | x == sdIV = "IV"
-  | x == sdV = "V"
-  | x == sdVI = "VI"
-  | x == sdVII = "VII"
-  | otherwise = ""
+displayScaleDegree :: ScaleDegree -> String
+displayScaleDegree I = "I"
+displayScaleDegree II = "II"
+displayScaleDegree III = "III"
+displayScaleDegree IV = "IV"
+displayScaleDegree V = "V"
+displayScaleDegree VI = "VI"
+displayScaleDegree VII = "VII"
 
 displayNote :: Note -> String
 displayNote = show >>> replace (Pattern "b") (Replacement "♭")
@@ -151,38 +131,38 @@ minorScale :: Note -> List Note
 minorScale note = buildScale note minorScaleInterval
 
 type ProgressionChordTypes =
-  { major :: Array (ScaleDegree Int)
-  , minor :: Array (ScaleDegree Int)
-  , dim :: Array (ScaleDegree Int)
+  { major :: Array (ScaleDegree)
+  , minor :: Array (ScaleDegree)
+  , dim :: Array (ScaleDegree)
   }
 
 progression
   :: (Note -> List Note)
   -> ProgressionChordTypes
   -> Note
-  -> List (ScaleDegree Int)
+  -> List ScaleDegree
   -> Maybe (List Chord)
 progression baseScale chordTypes root numerals = sequence $ chordFromNumeral scale <$> numerals
   where
-  chordFromNumeral :: List Note -> ScaleDegree Int -> Maybe Chord
-  chordFromNumeral s sd@(ScaleDegree n)
-    | elem sd chordTypes.major = Major <$> (index s n)
-    | elem sd chordTypes.minor = Minor <$> (index s n)
-    | elem sd chordTypes.dim = Dim <$> (index s n)
+  chordFromNumeral :: List Note -> ScaleDegree -> Maybe Chord
+  chordFromNumeral s sd
+    | elem sd chordTypes.major = Major <$> (index s $ sdToInt sd)
+    | elem sd chordTypes.minor = Minor <$> (index s $ sdToInt sd)
+    | elem sd chordTypes.dim = Dim <$> (index s $ sdToInt sd)
     | otherwise = Nothing
   scale :: List Note
   scale = baseScale root
 
-majorProgression :: Note -> List (ScaleDegree Int) -> Maybe (List Chord)
+majorProgression :: Note -> List ScaleDegree -> Maybe (List Chord)
 majorProgression = progression majorScale
-  { major: [ sdI, sdIV, sdV ]
-  , minor: [ sdII, sdIII, sdVI ]
-  , dim: [ sdVII ]
+  { major: [ I, IV, V ]
+  , minor: [ II, III, VI ]
+  , dim: [ VII ]
   }
 
-minorProgression :: Note -> List (ScaleDegree Int) -> Maybe (List Chord)
+minorProgression :: Note -> List ScaleDegree -> Maybe (List Chord)
 minorProgression = progression minorScale
-  { major: [ sdIII, sdVI, sdVII ]
-  , minor: [ sdI, sdIV, sdV ]
-  , dim: [ sdII ]
+  { major: [ III, VI, VII ]
+  , minor: [ I, IV, V ]
+  , dim: [ II ]
   }

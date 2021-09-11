@@ -3,7 +3,7 @@ module Client.ProgressionGenerator where
 import Prelude
 
 import Client.Style (noteBackgroundClass, noteBorderClass, noteColorClass)
-import Core.Data.Music (Chord, Note(..), ScaleDegree, chordRoot, chromaticScale, displayChord, displayNote, displayScaleDegree, majorProgression, sdI, sdII, sdIII, sdIV, sdV, sdVI, sdVII)
+import Core.Data.Music (Chord, Note(..), ScaleDegree(..), chordRoot, chromaticScale, displayChord, displayNote, displayScaleDegree, majorProgression)
 import Data.Array as Array
 import Data.List (List(..), snoc, zip)
 import Data.Maybe (Maybe(..))
@@ -13,16 +13,14 @@ import Elmish (ComponentDef, Dispatch, ReactElement, Transition)
 import Elmish.HTML.Internal (css)
 import Elmish.HTML.Styled as H
 
-type ScaleDegreeList = List (ScaleDegree Int)
-
 data Message
   = ChangeRootNote Note
-  | AddScaleDegree (ScaleDegree Int)
+  | AddScaleDegree ScaleDegree
   | ClearProgression
 
 type State =
   { rootNote :: Note
-  , scaleDegrees :: ScaleDegreeList
+  , scaleDegrees :: List ScaleDegree
   }
 
 def :: forall m. MonadAff m => ComponentDef m Message State
@@ -77,9 +75,9 @@ view state dispatch =
   scaleDegreesPicker =
     H.ul
       "cursor-pointer flex flex-row font-serif font-bold text-3xl my-4 w-1/3 "
-      $ scaleDegree <$> [ sdI, sdII, sdIII, sdIV, sdV, sdVI, sdVII ]
+      $ scaleDegree <$> [ I, II, III, IV, V, VI, VII ]
 
-  scaleDegree :: ScaleDegree Int -> ReactElement
+  scaleDegree :: ScaleDegree -> ReactElement
   scaleDegree sd =
     H.li_
       "mx-3 p-2 text-gray-500 hover:text-gray-300 bg-gray-800 hover:bg-gray-700 "
@@ -114,11 +112,11 @@ view state dispatch =
       $ Array.fromFoldable
       $ sdWithChord <$> state.scaleDegrees `zipChords` majorProgression state.rootNote state.scaleDegrees
 
-  zipChords :: ScaleDegreeList -> Maybe (List Chord) -> List (Tuple (ScaleDegree Int) Chord)
+  zipChords :: List ScaleDegree -> Maybe (List Chord) -> List (Tuple ScaleDegree Chord)
   zipChords _ Nothing = Nil
   zipChords sds (Just cs) = zip sds cs
 
-  sdWithChord :: Tuple (ScaleDegree Int) Chord -> ReactElement
+  sdWithChord :: Tuple ScaleDegree Chord -> ReactElement
   sdWithChord (Tuple sd chord) =
     H.div
       ( "flex flex-col text-3xl p-4 mr-1 "
