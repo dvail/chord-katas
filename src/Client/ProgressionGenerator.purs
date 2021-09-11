@@ -82,7 +82,7 @@ view state dispatch =
   scaleDegree :: ScaleDegree Int -> ReactElement
   scaleDegree sd =
     H.li_
-       "mx-3 p-2 text-gray-500 hover:text-gray-300 bg-gray-800 hover:bg-gray-700 "
+      "mx-3 p-2 text-gray-500 hover:text-gray-300 bg-gray-800 hover:bg-gray-700 "
       { title: "Add chord of scale degree " <> displayScaleDegree sd
       , onClick: dispatch $ AddScaleDegree sd
       , style: css { flexBasis: "calc(100% / 7)" }
@@ -94,44 +94,41 @@ view state dispatch =
     H.div ""
       [ H.h2 "text-xl"
           [ H.text "Progression in the Key of "
-          , H.span ("font-bold " <> noteColorClass state.rootNote) $ [ H.text $ displayNote state.rootNote ]
+          , H.span ("font-bold " <> noteColorClass state.rootNote) [ H.text $ displayNote state.rootNote ]
           ]
-
       , case state.scaleDegrees of
           Nil -> noProgression
           _ -> selectedProgression
       ]
 
   noProgression :: ReactElement
-  noProgression = H.h3
-    "p-6 m-4 text-gray-500 text-lg rounded bg-white bg-opacity-10"
-    "No progression selected"
+  noProgression =
+    H.h3
+      "p-6 m-4 text-gray-500 text-lg rounded bg-white bg-opacity-10"
+      "No progression selected"
 
   selectedProgression :: ReactElement
   selectedProgression =
     H.div
       "flex flex-row justify-center m-4"
       $ Array.fromFoldable
-      $ sdWithChord <$> zipChords chords state.scaleDegrees
-    where
-    chords = majorProgression state.rootNote state.scaleDegrees
-    zipChords
-      :: Maybe (List Chord)
-      -> List (ScaleDegree Int)
-      -> List (Tuple Chord (ScaleDegree Int))
-    zipChords Nothing _ = Nil
-    zipChords (Just cs) sds = zip cs sds
+      $ sdWithChord <$> state.scaleDegrees `zipChords` majorProgression state.rootNote state.scaleDegrees
 
-  sdWithChord :: Tuple Chord (ScaleDegree Int) -> ReactElement
-  sdWithChord (Tuple chord sd) = H.div
-    ( "flex flex-col text-3xl p-4 mr-1 "
-        <> "font-bold "
-        <> "bg-white bg-opacity-10 "
-        <> (noteColorClass <<< chordRoot) chord
-    )
-    [ H.span "font-serif text-gray-200 " $ H.text $ displayScaleDegree sd
-    , H.text $ displayChord chord
-    ]
+  zipChords :: ScaleDegreeList -> Maybe (List Chord) -> List (Tuple (ScaleDegree Int) Chord)
+  zipChords _ Nothing = Nil
+  zipChords sds (Just cs) = zip sds cs
+
+  sdWithChord :: Tuple (ScaleDegree Int) Chord -> ReactElement
+  sdWithChord (Tuple sd chord) =
+    H.div
+      ( "flex flex-col text-3xl p-4 mr-1 "
+          <> "font-bold "
+          <> "bg-white bg-opacity-10 "
+          <> (noteColorClass <<< chordRoot) chord
+      )
+      [ H.span "font-serif text-gray-200 " $ H.text $ displayScaleDegree sd
+      , H.text $ displayChord chord
+      ]
 
   clearButton :: ReactElement
   clearButton =
