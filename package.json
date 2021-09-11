@@ -15,16 +15,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "autoprefixer": "^10.3.2",
+    "autoprefixer": "^9.8.6",
     "nodemon": "^2.0.4",
-    "parcel": "^2.0.0-rc.0",
-    "postcss": "^8.3.6",
+    "parcel-bundler": "^1.12.5",
+    "postcss": "^7.0.36",
     "purescript": "^0.14.4",
     "purescript-psa": "^0.7.3",
     "purgecss": "^3.0.0",
     "purs-tidy": "^0.4.6",
     "spago": "^0.20.3",
-    "tailwindcss": "^2.2.7"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.10"
   },
   "dependencies": {
     "react": "^17.0.1",
