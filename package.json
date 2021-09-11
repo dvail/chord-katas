@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "parcel -p 4008 index.html",
-    "bundle:build": "spago build --purs-args '--codegen corefn'",
+    "bundle:build": "spago build && spago build --purs-args '--codegen corefn'",
     "bundle:dce": "./bin/zephyr/zephyr -f Client.Main.main",
     "bundle:parcel": "parcel build index.html --public-url '.' --no-source-maps",
     "build": "npm run bundle:build && npm run bundle:dce && npm run bundle:parcel"
