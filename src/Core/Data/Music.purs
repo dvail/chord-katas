@@ -66,14 +66,14 @@ data ScaleDegree = I | II | III | IV | V | VI | VII
 
 derive instance Eq ScaleDegree
 
-sdToInt :: ScaleDegree -> Int
-sdToInt I = 1
-sdToInt II = 2
-sdToInt III= 3
-sdToInt IV = 4
-sdToInt V = 5
-sdToInt VI = 6
-sdToInt VII = 7
+sdToIndex :: ScaleDegree -> Int
+sdToIndex I = 0
+sdToIndex II = 1
+sdToIndex III= 2
+sdToIndex IV = 3
+sdToIndex V = 4
+sdToIndex VI = 5
+sdToIndex VII = 6
 
 displayScaleDegree :: ScaleDegree -> String
 displayScaleDegree I = "I"
@@ -130,39 +130,43 @@ majorScale note = buildScale note majorScaleInterval
 minorScale :: Note -> List Note
 minorScale note = buildScale note minorScaleInterval
 
-type ProgressionChordTypes =
-  { major :: Array (ScaleDegree)
-  , minor :: Array (ScaleDegree)
-  , dim :: Array (ScaleDegree)
-  }
-
+-- TODO There should be a way to remove all instances of `Maybe` in the below code
+-- Might require using something other than a `List` for the incoming scale
 progression
   :: (Note -> List Note)
-  -> ProgressionChordTypes
+  -> (ScaleDegree -> Note -> Chord)
   -> Note
   -> List ScaleDegree
   -> Maybe (List Chord)
-progression baseScale chordTypes root numerals = sequence $ chordFromNumeral scale <$> numerals
+progression baseScale chordFor root numerals = sequence $ chordFromNumeral scale <$> numerals
   where
   chordFromNumeral :: List Note -> ScaleDegree -> Maybe Chord
-  chordFromNumeral s sd
-    | elem sd chordTypes.major = Major <$> (index s $ sdToInt sd)
-    | elem sd chordTypes.minor = Minor <$> (index s $ sdToInt sd)
-    | elem sd chordTypes.dim = Dim <$> (index s $ sdToInt sd)
+  chordFromNumeral s sd 
+    | Just note <- (index s $ sdToIndex sd) = pure $ chordFor sd note
     | otherwise = Nothing
   scale :: List Note
   scale = baseScale root
 
+majorProgressionChord :: ScaleDegree -> Note -> Chord
+majorProgressionChord I n = Major n
+majorProgressionChord II n = Minor n
+majorProgressionChord III n = Minor n
+majorProgressionChord IV n = Major n
+majorProgressionChord V n = Major n
+majorProgressionChord VI n = Minor n
+majorProgressionChord VII n = Dim n
+
+minorProgressionChord :: ScaleDegree -> Note -> Chord
+minorProgressionChord I n = Minor n
+minorProgressionChord II n = Dim n
+minorProgressionChord III n = Major n
+minorProgressionChord IV n = Minor n
+minorProgressionChord V n = Minor n
+minorProgressionChord VI n = Major n
+minorProgressionChord VII n = Major n
+
 majorProgression :: Note -> List ScaleDegree -> Maybe (List Chord)
-majorProgression = progression majorScale
-  { major: [ I, IV, V ]
-  , minor: [ II, III, VI ]
-  , dim: [ VII ]
-  }
+majorProgression = progression majorScale majorProgressionChord
 
 minorProgression :: Note -> List ScaleDegree -> Maybe (List Chord)
-minorProgression = progression minorScale
-  { major: [ III, VI, VII ]
-  , minor: [ I, IV, V ]
-  , dim: [ II ]
-  }
+minorProgression = progression minorScale minorProgressionChord
